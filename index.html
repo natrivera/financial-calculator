@@ -15,21 +15,64 @@
   <div class="container">
     <div id="main" class="main">
       <div id="calc" class="calc">
-        <div id="display" class="c-display"></div>
-        <div id="compute" class="c-butt">CPT</div>
+        <div class="head">
+          <div id="title" class="title">Financial Calculator</div>
+          <div id="display" class="c-display">0</div>
+        </div>
         <div id="toprow" class="toprow">
+          <div id="compute" class="c-butt-black">CPT</div>
+          <div class="c-butt-org" onclick="second();">2-ND</div>
+          <div class="c-butt-black">&nbsp;</div>
+          <div class="c-butt-black">&nbsp;</div>
+          <div class="c-butt-black">&nbsp;</div>
         </div>
         <div id="functrow" class="functrow">
           <div id="number" class="c-butt">N</div>
           <div id="years" class="c-butt">I/Y</div>
+          <div id="present" class="c-butt">PV</div>
           <div id="payment" class="c-butt">PMT</div>
-          <div id="present" class="c-butt">Pr</div>
-          <div id="future" class="c-butt">Ft</div>
+          <div id="future" class="c-butt">FV</div>
+        </div>
+        <div class="numbers">
+          <div class="c-butt-black">&nbsp;</div>
+          <div id="7" class="c-butt-dark" onclick="addnumber(7);">7</div>
+          <div id="8" class="c-butt-dark" onclick="addnumber(8);">8</div>
+          <div id="9" class="c-butt-dark" onclick="addnumber(9);">9</div>
+          <div id="+" class="c-butt-black">+</div>
+        </div>
+        <div class="numbers">
+          <div class="c-butt-black">&nbsp;</div>
+          <div id="4" class="c-butt-dark" onclick="addnumber(4);">4</div>
+          <div id="5" class="c-butt-dark" onclick="addnumber(5);">5</div>
+          <div id="6" class="c-butt-dark" onclick="addnumber(6);">6</div>
+          <div id="-" class="c-butt-black">-</div>
+        </div>
+        <div class="numbers">
+          <div class="c-butt-black">&nbsp;</div>
+          <div id="1" class="c-butt-dark" onclick="addnumber(1);">1</div>
+          <div id="2" class="c-butt-dark" onclick="addnumber(2);">2</div>
+          <div id="3" class="c-butt-dark" onclick="addnumber(3);">3</div>
+          <div id="*" class="c-butt-black">x</div>
+        </div>
+        <div class="numbers">
+          <div class="c-butt-black">&nbsp;</div>
+          <div id="." class="c-butt-black" onclick="addnumber('.');">.</div>
+          <div id="0" class="c-butt-dark" onclick="addnumber(0);">0</div>
+          <div id="+/-" class="c-butt-black" onclick="addnumber('w');">+/-</div>
+          <div id="/" class="c-butt-black">&#247;</div>
+        </div>
+        <div class="numbers">
+          <div id="clr" class="c-butt-black" onclick="clearbutt();">CE | E</div>
+          <div class="c-butt-black">&nbsp;</div>
+          <div class="c-butt-black">&nbsp;</div>
+          <div class="c-butt-black">&nbsp;</div>
+          <div id="=" class="c-butt-black" onclick="solve();">=</div>
         </div>
       </div>
     </div>
 
   </div>
+  <script src="js/index.js"></script>
 </body>
 
 </html>
