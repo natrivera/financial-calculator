@@ -2,18 +2,21 @@ body {
   background-color: #eee;
   overflow: hidden;
 }
+
 .main {
   height: 100vh;
   margin: auto;
 }
+
 .calc {
   padding: 30px 10px;
   width: 340px;
   margin: 10% auto 0px;
-  background-color:  #1A2828;
+  background-color: #1A2828;
   box-shadow: 0px 0px 15px black;
   border-radius: 10px;
 }
+
 .head {
   background-color: gray;
   color: black;
@@ -22,10 +25,12 @@ body {
   margin-bottom: 10px;
   box-shadow: 0px 0px 20px black;
 }
+
 .title {
   text-align: center;
   font-size: 2em;
 }
+
 .c-display {
   background-color: #428957;
   color: black;
@@ -52,6 +57,7 @@ body {
   text-align: center;
   border-radius: 5px;
 }
+
 .c-butt-org {
   background-color: #FFE4B2;
   color: black;
@@ -121,9 +127,11 @@ body {
   text-align: center;
   border-radius: 5px;
 }
+
 .highlight {
   box-shadow: 0px 0px 5px white;
 }
+
 .numbers {
   margin: auto;
 }

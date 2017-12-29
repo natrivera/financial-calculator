@@ -19,17 +19,17 @@ function addnumber(arg) {
   if (arg == 'decimal' || arg == 'sign') {
     if (arg == 'sign') {
       var tempstr = document.getElementById('display').innerHTML;
-        if(negative == true) {
-          document.getElementById('display').innerHTML = tempstr.substring(1);;
-          negative = false;
-        } else {
-          negative = true;
-          document.getElementById('display').innerHTML = "-" + tempstr;
-        }
-        togglepress('sign');
-    } else if(arg == 'decimal') {
+      if (negative == true) {
+        document.getElementById('display').innerHTML = tempstr.substring(1);;
+        negative = false;
+      } else {
+        negative = true;
+        document.getElementById('display').innerHTML = "-" + tempstr;
+      }
+      togglepress('sign');
+    } else if (arg == 'decimal') {
       var tempstr = document.getElementById('display').innerHTML;
-      if(tempstr.indexOf('.') !== -1) {
+      if (tempstr.indexOf('.') !== -1) {
 
       } else {
         document.getElementById('display').innerHTML = tempstr + ".";
@@ -170,7 +170,7 @@ function togglepress(id) {
 
 function plus() {
   var temp = document.getElementById('display').innerHTML;
-  if(isNaN(temp)) {
+  if (isNaN(temp)) {
     matharray.pop();
     matharray.push("+");
   } else {
@@ -183,7 +183,7 @@ function plus() {
 
 function minus() {
   var temp = document.getElementById('display').innerHTML;
-  if(isNaN(temp)) {
+  if (isNaN(temp)) {
     matharray.pop();
     matharray.push("-");
   } else {
@@ -196,7 +196,7 @@ function minus() {
 
 function times() {
   var temp = document.getElementById('display').innerHTML;
-  if(isNaN(temp)) {
+  if (isNaN(temp)) {
     matharray.pop();
     matharray.push("*");
   } else {
@@ -209,7 +209,7 @@ function times() {
 
 function divide() {
   var temp = document.getElementById('display').innerHTML;
-  if(isNaN(temp)) {
+  if (isNaN(temp)) {
     matharray.pop();
     matharray.push("/");
   } else {
@@ -224,17 +224,69 @@ function divide() {
 function equals() {
   var temp = document.getElementById('display').innerHTML;
   matharray.push(temp);
-  console.log(matharray);
+  //console.log(matharray);
   var str = runmath(matharray);
   document.getElementById('display').innerHTML = str;
   matharray = [];
   negative = false;
   compute = false;
-  displaing = true;
 }
 
 function runmath(arr) {
   var message = arr;
+  var number = 0;
+  var signs = ["*", "/", "+", "-"];
+  // for (var i = 0; i < signs.length; i++) {
+  //   for (var j = 0; j < arr.length; j++) {
+  //     if (signs[i] == arr[j]) {
+  //       var num1 = parseFloat(arr[j - 1]);
+  //       var num2 = parseFloat(arr[j + 1]);
+  //       if (signs[i] == "*") {
+  //         number = num1 * num2;
+  //       }
+  //       if (signs[i] == "/") {
+  //         number = num1 / num2;
+  //       }
+  //       if (signs[i] == "+") {
+  //         number = num1 + num2;
+  //       }
+  //       if (signs[i] == "-") {
+  //         number = num1 - num2;
+  //       }
+  //     }
+  //   }
+  // }
+var bool = true;
+  while (arr.length > 2) {
+    for(var i = 0; i < signs.length; i++) {
+      for(var j = 0; j < arr.length; j++) {
+        if(signs[i] == arr[j]) {
+          var num1 = parseFloat(arr[j - 1]);
+          var num2 = parseFloat(arr[j + 1]);
+          var number = 0;
+                if (signs[i] == "*") {
+                  number = num1 * num2;
+                }
+                if (signs[i] == "/") {
+                  number = num1 / num2;
+                }
+                if (signs[i] == "+") {
+                  number = num1 + num2;
+                }
+                if (signs[i] == "-") {
+                  number = num1 - num2;
+                }
+          //console.log(arr);
+          arr.splice((j - 1) , 2);
+          arr[j -1] = number.toString();
+          //console.log(arr);
+        }
+      }
+    }
+    number = arr[0];
+    bool = false;
+  }
+  message = number;
   return message;
 }
 
