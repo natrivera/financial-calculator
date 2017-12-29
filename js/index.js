@@ -1,6 +1,7 @@
 var secondbool = false;
 var compute = false;
 var displaing = false;
+var negative = false;
 
 var nterms = 0;
 var rate = 0;
@@ -11,11 +12,23 @@ var present = 0;
 function addnumber(arg) {
 
   if (displaing) {
-    clearbutt();
+    document.getElementById('display').innerHTML = "0";
     displaing = false;
   }
-  if (arg == '.' || arg == 'w') {
-
+  if (arg == 'decimal' || arg == 'sign') {
+    if (arg == 'sign') {
+      var tempstr = document.getElementById('display').innerHTML;
+        if(negative == true) {
+          document.getElementById('display').innerHTML = tempstr.substring(1);;
+          negative = false;
+        } else {
+          negative = true;
+          document.getElementById('display').innerHTML = "-" + tempstr;
+        }
+        togglepress('sign');
+    } else if(arg == 'decimal') {
+      togglepress('decimal');
+    }
   } else {
     var displaytext = document.getElementById('display').innerHTML;
     if (displaytext == "0") {
@@ -32,14 +45,13 @@ function addnumber(arg) {
 } //end of addnumber
 
 function clearbutt() {
-  if(secondbool == true) {
+  if (secondbool == true) {
     nterms = 0;
     rate = 0;
     payment = 0;
     future = 0;
     present = 0;
     document.getElementById('second').classList.remove('highlight');
-    alert("help");
     secondbool = false;
   }
   compute = false;
@@ -71,7 +83,7 @@ function npress() {
   }
   document.getElementById('display').innerHTML = "N =    " + nterms.toString();
   displaing = true;
-    togglepress("number");
+  togglepress("number");
 }
 
 function ipress() {
@@ -137,7 +149,7 @@ function togglepress(id) {
   document.getElementById(id).classList.add("highlight");
   setTimeout(function() {
     document.getElementById(id).classList.remove('highlight');
-  },300);
+  }, 300);
 }
 
 function plus() {}
@@ -155,6 +167,7 @@ function PV(fut, n, int, pay) {
   if (pay == 0) {
     int = int / 100;
     var pv = fut / (Math.pow((1 + int), n));
+    pv = pv * -1;
     pv = Math.round(pv * 100) / 100;
     return pv;
   }
@@ -164,7 +177,7 @@ function PV(fut, n, int, pay) {
 function FV(pres, n, int, pay) {
   if (pay == 0) {
     int = int / 100;
-    var fv = pres * (Math.pow((1 + int), n));
+    var fv = (pres * -1) * (Math.pow((1 + int), n));
     fv = Math.round(fv * 100) / 100;
     return fv;
   }
@@ -173,7 +186,7 @@ function FV(pres, n, int, pay) {
 
 function RATE(pres, n, fut, pay) {
   if (pay == 0) {
-    var number = fut / pres;
+    var number = fut / (pres * -1);
     var rate = (Math.pow(number, (1 / n))) - 1;
     rate = Math.round(rate * 10000) / 100;
     return rate;
@@ -184,7 +197,7 @@ function RATE(pres, n, fut, pay) {
 function TERM(pres, rate, fut, pay) {
   if (pay == 0) {
     rate = rate / 100;
-    var number = fut / pres;
+    var number = fut / (pres * -1);
     var terms = Math.log(number) / Math.log(1 + rate);
     terms = Math.round(terms * 100) / 100;
     return terms;

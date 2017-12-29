@@ -1,14 +1,15 @@
 body {
   background-color: #eee;
+  overflow: hidden;
 }
 .main {
   height: 100vh;
   margin: auto;
 }
 .calc {
-  padding: 20px 10px;
+  padding: 30px 10px;
   width: 340px;
-  margin: 40px auto;
+  margin: 10% auto 0px;
   background-color:  #1A2828;
   box-shadow: 0px 0px 15px black;
   border-radius: 10px;
@@ -28,7 +29,8 @@ body {
 .c-display {
   background-color: #428957;
   color: black;
-  font-size: 1.2em;
+  font-size: 1.3em;
+  font-weight: bold;
   width: 95%;
   height: 40px;
   border: 2px solid white;
