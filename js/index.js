@@ -2,6 +2,7 @@ var secondbool = false;
 var compute = false;
 var displaing = false;
 var negative = false;
+var matharray = [];
 
 var nterms = 0;
 var rate = 0;
@@ -56,6 +57,7 @@ function clearbutt() {
   }
   compute = false;
   secondbool = false;
+  matharray = [];
   document.getElementById('second').classList.remove('highlight');
   document.getElementById('display').innerHTML = "0";
   togglepress("clr");
@@ -67,11 +69,13 @@ function second() {
 }
 
 function cptpress() {
+  matharray = [];
   compute = true;
   togglepress("compute");
 }
 
 function npress() {
+  matharray = [];
   if (compute) {
     nterms = TERM(present, rate, future, payment); //pres , rate , fut , pay
     compute = false;
@@ -87,6 +91,7 @@ function npress() {
 }
 
 function ipress() {
+  matharray = [];
   if (compute) {
     rate = RATE(present, nterms, future, payment); //pres , n , fut , pay
     compute = false;
@@ -102,6 +107,7 @@ function ipress() {
 }
 
 function paypress() {
+  matharray = [];
   if (compute) {
 
   } else {
@@ -116,6 +122,7 @@ function paypress() {
 }
 
 function prepress() {
+  matharray = [];
   if (compute) {
     present = PV(future, nterms, rate, payment);
     compute = false;
@@ -131,6 +138,7 @@ function prepress() {
 }
 
 function futpress() {
+  matharray = [];
   if (compute) {
     future = FV(present, nterms, rate, payment);
     compute = false;
@@ -149,18 +157,71 @@ function togglepress(id) {
   document.getElementById(id).classList.add("highlight");
   setTimeout(function() {
     document.getElementById(id).classList.remove('highlight');
-  }, 300);
+  }, 200);
 }
 
-function plus() {}
+function plus() {
+  var temp = document.getElementById('display').innerHTML;
+  if(isNaN(temp)) {
+    matharray.pop();
+    matharray.push("+");
+  } else {
+    matharray.push(temp);
+    matharray.push("+");
+  }
+  document.getElementById('display').innerHTML = "+";
+  displaing = true;
+}
 
-function minus() {}
+function minus() {
+  var temp = document.getElementById('display').innerHTML;
+  if(isNaN(temp)) {
+    matharray.pop();
+    matharray.push("-");
+  } else {
+    matharray.push(temp);
+    matharray.push("-");
+  }
+  document.getElementById('display').innerHTML = "-";
+  displaing = true;
+}
 
-function times() {}
+function times() {
+  var temp = document.getElementById('display').innerHTML;
+  if(isNaN(temp)) {
+    matharray.pop();
+    matharray.push("*");
+  } else {
+    matharray.push(temp);
+    matharray.push("*");
+  }
+  document.getElementById('display').innerHTML = "x";
+  displaing = true;
+}
 
-function division() {}
+function divide() {
+  var temp = document.getElementById('display').innerHTML;
+  if(isNaN(temp)) {
+    matharray.pop();
+    matharray.push("/");
+  } else {
+    matharray.push(temp);
+    matharray.push("/");
+  }
 
-function solve() {}
+  document.getElementById('display').innerHTML = "&#247;";
+  displaing = true;
+}
+
+function equals() {
+  var temp = document.getElementById('display').innerHTML;
+  matharray.push(temp);
+  console.log(matharray);
+  matharray = [];
+  negative = false;
+  compute = false;
+  displaing = true;
+}
 
 
 function PV(fut, n, int, pay) {
