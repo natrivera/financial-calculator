@@ -28,6 +28,12 @@ function addnumber(arg) {
         }
         togglepress('sign');
     } else if(arg == 'decimal') {
+      var tempstr = document.getElementById('display').innerHTML;
+      if(tempstr.indexOf('.') !== -1) {
+
+      } else {
+        document.getElementById('display').innerHTML = tempstr + ".";
+      }
       togglepress('decimal');
     }
   } else {
@@ -154,7 +160,9 @@ function futpress() {
 }
 
 function togglepress(id) {
-  document.getElementById(id).classList.add("highlight");
+  var str = id;
+  var elem = document.getElementById(str);
+  elem.classList.add("highlight");
   setTimeout(function() {
     document.getElementById(id).classList.remove('highlight');
   }, 200);
@@ -217,10 +225,17 @@ function equals() {
   var temp = document.getElementById('display').innerHTML;
   matharray.push(temp);
   console.log(matharray);
+  var str = runmath(matharray);
+  document.getElementById('display').innerHTML = str;
   matharray = [];
   negative = false;
   compute = false;
   displaing = true;
+}
+
+function runmath(arr) {
+  var message = arr;
+  return message;
 }
 
 
