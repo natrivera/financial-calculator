@@ -58,14 +58,17 @@ function clearbutt() {
     payment = 0;
     future = 0;
     present = 0;
-    document.getElementById('second').classList.remove('highlight');
     secondbool = false;
+    document.getElementById('second').classList.remove('highlight');
+    document.getElementById('display').innerHTML = "CLEAR ALL";
   }
   compute = false;
   secondbool = false;
   matharray = [];
   document.getElementById('second').classList.remove('highlight');
-  document.getElementById('display').innerHTML = "0";
+  setTimeout(function() {
+    document.getElementById('display').innerHTML = "0";
+  }, 250);
   togglepress("clr");
 }
 
@@ -115,7 +118,7 @@ function ipress() {
 function paypress() {
   matharray = [];
   if (compute) {
-    payment = PMT(future , nterms , rate , present); //fut , n , int , pres
+    payment = PMT(future, nterms, rate, present); //fut , n , int , pres
     compute = false;
   } else {
     if (!displaing) {
@@ -271,10 +274,10 @@ function runmath(arr) {
   return message;
 }
 
-function PMT(fut , n , int , pres) {
-  if(fut == 0) {
+function PMT(fut, n, int, pres) {
+  if (fut == 0) {
     int = int / 100;
-    var pay = 1 - Math.pow( ( 1 + int ) , ( n * -1 ) );
+    var pay = 1 - Math.pow((1 + int), (n * -1));
     pay = (int * pres) / pay;
     return pay.toFixed(4);
   } else {
@@ -291,9 +294,9 @@ function PV(fut, n, int, pay) {
     pv = Math.round(pv * 100) / 100;
     return pv;
   } else {
-    if(fut == 0) {
+    if (fut == 0) {
       int = int / 100;
-      var pv = Math.pow(1 + int , n * -1 );
+      var pv = Math.pow(1 + int, n * -1);
       pv = (1 - pv) / int;
       pv = pv * pay;
       return pv.toFixed(4);;
@@ -311,9 +314,9 @@ function FV(pres, n, int, pay) {
     fv = Math.round(fv * 100) / 100;
     return fv;
   } else {
-    if(pres == 0) {
+    if (pres == 0) {
       int = int / 100;
-      var fv = Math.pow( ( 1 + int) , n ) - 1;
+      var fv = Math.pow((1 + int), n) - 1;
       fv = pay * (fv / int);
       return fv.toFixed(4);
     } else {
@@ -330,10 +333,13 @@ function RATE(pres, n, fut, pay) {
     rate = Math.round(rate * 10000) / 100;
     return rate;
   } else {
-    var diff = fut - (pres * -1);
-    var ytm = pay + (diff / n);
-    ytm = ytm / (diff / 2);
-    ytm = ytm / 10;
+    pres = parseFloat(pres);
+    n = parseFloat(n);
+    fut = parseFloat(fut);
+    pay = parseFloat(pay);
+    pres = (pres * -1);
+    var ytm = (pay + ((fut - pres) / n)) / ((fut + pres) / 2);
+    ytm = Math.round(ytm * 10000) / 100;
     return ytm;
   }
 
