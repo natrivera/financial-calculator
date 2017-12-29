@@ -115,7 +115,8 @@ function ipress() {
 function paypress() {
   matharray = [];
   if (compute) {
-
+    payment = PMT(future , nterms , rate , present); //fut , n , int , pres
+    compute = false;
   } else {
     if (!displaing) {
       var temp = document.getElementById('display').innerHTML;
@@ -236,49 +237,29 @@ function runmath(arr) {
   var message = arr;
   var number = 0;
   var signs = ["*", "/", "+", "-"];
-  // for (var i = 0; i < signs.length; i++) {
-  //   for (var j = 0; j < arr.length; j++) {
-  //     if (signs[i] == arr[j]) {
-  //       var num1 = parseFloat(arr[j - 1]);
-  //       var num2 = parseFloat(arr[j + 1]);
-  //       if (signs[i] == "*") {
-  //         number = num1 * num2;
-  //       }
-  //       if (signs[i] == "/") {
-  //         number = num1 / num2;
-  //       }
-  //       if (signs[i] == "+") {
-  //         number = num1 + num2;
-  //       }
-  //       if (signs[i] == "-") {
-  //         number = num1 - num2;
-  //       }
-  //     }
-  //   }
-  // }
-var bool = true;
+  var bool = true;
   while (arr.length > 2) {
-    for(var i = 0; i < signs.length; i++) {
-      for(var j = 0; j < arr.length; j++) {
-        if(signs[i] == arr[j]) {
+    for (var i = 0; i < signs.length; i++) {
+      for (var j = 0; j < arr.length; j++) {
+        if (signs[i] == arr[j]) {
           var num1 = parseFloat(arr[j - 1]);
           var num2 = parseFloat(arr[j + 1]);
           var number = 0;
-                if (signs[i] == "*") {
-                  number = num1 * num2;
-                }
-                if (signs[i] == "/") {
-                  number = num1 / num2;
-                }
-                if (signs[i] == "+") {
-                  number = num1 + num2;
-                }
-                if (signs[i] == "-") {
-                  number = num1 - num2;
-                }
+          if (signs[i] == "*") {
+            number = num1 * num2;
+          }
+          if (signs[i] == "/") {
+            number = num1 / num2;
+          }
+          if (signs[i] == "+") {
+            number = num1 + num2;
+          }
+          if (signs[i] == "-") {
+            number = num1 - num2;
+          }
           //console.log(arr);
-          arr.splice((j - 1) , 2);
-          arr[j -1] = number.toString();
+          arr.splice((j - 1), 2);
+          arr[j - 1] = number.toString();
           //console.log(arr);
         }
       }
@@ -290,6 +271,17 @@ var bool = true;
   return message;
 }
 
+function PMT(fut , n , int , pres) {
+  if(fut == 0) {
+    int = int / 100;
+    var pay = 1 - Math.pow( ( 1 + int ) , ( n * -1 ) );
+    pay = (int * pres) / pay;
+    return pay.toFixed(4);
+  } else {
+    return "Error";
+  }
+}
+
 
 function PV(fut, n, int, pay) {
   if (pay == 0) {
@@ -298,6 +290,16 @@ function PV(fut, n, int, pay) {
     pv = pv * -1;
     pv = Math.round(pv * 100) / 100;
     return pv;
+  } else {
+    if(fut == 0) {
+      int = int / 100;
+      var pv = Math.pow(1 + int , n * -1 );
+      pv = (1 - pv) / int;
+      pv = pv * pay;
+      return pv.toFixed(4);;
+    } else {
+      return "Error";
+    }
   }
 
 }
@@ -308,6 +310,15 @@ function FV(pres, n, int, pay) {
     var fv = (pres * -1) * (Math.pow((1 + int), n));
     fv = Math.round(fv * 100) / 100;
     return fv;
+  } else {
+    if(pres == 0) {
+      int = int / 100;
+      var fv = Math.pow( ( 1 + int) , n ) - 1;
+      fv = pay * (fv / int);
+      return fv.toFixed(4);
+    } else {
+      return "Error";
+    }
   }
 
 }
@@ -318,6 +329,12 @@ function RATE(pres, n, fut, pay) {
     var rate = (Math.pow(number, (1 / n))) - 1;
     rate = Math.round(rate * 10000) / 100;
     return rate;
+  } else {
+    var diff = fut - (pres * -1);
+    var ytm = pay + (diff / n);
+    ytm = ytm / (diff / 2);
+    ytm = ytm / 10;
+    return ytm;
   }
 
 }
