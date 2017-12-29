@@ -2,8 +2,15 @@ var secondbool = false;
 var compute = false;
 var displaing = false;
 var negative = false;
+var cashsetting = false;
+var npvbool = false;
+var initialcash = null;
 var matharray = [];
-
+var cashflow = [];
+var cashfreq = [];
+var cfposition = -1;
+var npv = 0;
+var npvrate = 0;
 var nterms = 0;
 var rate = 0;
 var payment = 0;
@@ -19,13 +26,37 @@ function addnumber(arg) {
   if (arg == 'decimal' || arg == 'sign') {
     if (arg == 'sign') {
       var tempstr = document.getElementById('display').innerHTML;
-      if (negative == true) {
-        document.getElementById('display').innerHTML = tempstr.substring(1);;
-        negative = false;
+      if (isNaN(tempstr) == false) {
+        if (negative == true) {
+          document.getElementById('display').innerHTML = tempstr.substring(1);
+          negative = false;
+        } else {
+          negative = true;
+          document.getElementById('display').innerHTML = "-" + tempstr;
+        }
       } else {
-        negative = true;
-        document.getElementById('display').innerHTML = "-" + tempstr;
+        var front = "";
+        var nums = "";
+        if (tempstr.indexOf("NPV") != -1) {
+          front = tempstr.substring(0, 6);
+          nums = tempstr.substring(6);
+        } else if (tempstr.indexOf("I") != -1) {
+          front = tempstr.substring(0, 4);
+          nums = tempstr.substring(4);
+        } else if (tempstr.indexOf("CF") != -1) {
+          front = tempstr.substring(0, 6);
+          nums = tempstr.substring(6);
+        }
+        if (negative == true) {
+          nums = nums.substring(1);
+          negative = false;
+        } else {
+          negative = true;
+          nums = "-" + nums;
+        }
+        document.getElementById('display').innerHTML = front + nums;
       }
+
       togglepress('sign');
     } else if (arg == 'decimal') {
       var tempstr = document.getElementById('display').innerHTML;
@@ -59,9 +90,17 @@ function clearbutt() {
     future = 0;
     present = 0;
     secondbool = false;
+    cfposition = -1;
+    cashflow = [];
+    initialcash = null;
+    cashsetting = false;
+    npvbool = false;
+    npv = 0;
+    npvrate = 0;
     document.getElementById('second').classList.remove('highlight');
     document.getElementById('display').innerHTML = "CLEAR ALL";
   }
+  negative = false;
   compute = false;
   secondbool = false;
   matharray = [];
@@ -163,13 +202,111 @@ function futpress() {
   togglepress("future");
 }
 
+function entpress() {
+  if (cashsetting) {
+    var temp = document.getElementById('display').innerHTML;
+    temp = temp.substring(5);
+    cashflow[cfposition + 1] = temp;
+    if (cfposition == -1) {
+      initialcash = temp;
+    }
+    document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition + 1];
+  } else if (npvbool) {
+    var text = document.getElementById('display').innerHTML;
+    if (text.indexOf("I") != -1) {
+      text = text.substring(4);
+      npvrate = text;
+      document.getElementById('display').innerHTML = "I = " + npvrate;
+    } else {
+      text = text.substring(6);
+      npv = text;
+      document.getElementById('display').innerHTML = "NPV = " + npv;
+    }
+  }
+
+
+  togglepress("enter");
+}
+
+function uppress() {
+
+  if (cashsetting && cashflow[cfposition + 1] != null) {
+    cfposition++;
+    if (cashflow[cfposition + 1] == null) {
+      document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = ";
+    } else {
+      document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition];
+    }
+
+  } else if (npvbool) {
+
+  }
+
+  togglepress("up");
+}
+
+function downpress() {
+  if (cashsetting && cfposition > -1) {
+    cfposition--;
+    document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition + 1];
+  } else if (npvbool) {
+    if (npv == 0) {
+      document.getElementById('display').innerHTML = "NPV = ";
+    } else {
+      document.getElementById('display').innerHTML = "NPV = " + npv;
+    }
+
+  }
+
+  togglepress("down");
+}
+
+function cfpress() {
+  npvbool = false;
+  cashsetting = true;
+  cfposition = -1;
+  if (initialcash == null) {
+    document.getElementById('display').innerHTML = "CF0 = ";
+  } else {
+    document.getElementById('display').innerHTML = "CF0 = " + cashflow[0];
+  }
+
+  togglepress("cf");
+}
+
+function npvpress() {
+  var text = document.getElementById('display').innerHTML;
+  if (compute && text.indexOf("NPV") != -1) {
+    var arr = cashflow;
+    arr.splice(0, 1);
+    npv = NPV(npvrate, cashflow[0], arr); //int , initial , arr
+    document.getElementById('display').innerHTML = "NPV = " + npv;
+    compute = false;
+  } else {
+    if (npvrate == 0) {
+      document.getElementById('display').innerHTML = "I = ";
+    } else {
+      document.getElementById('display').innerHTML = "I = " + npvrate;
+    }
+    npvbool = true;
+  }
+
+  cashsetting = false;
+  togglepress("npv");
+}
+
+function irrpress() {
+
+  togglepress("irr");
+}
+
 function togglepress(id) {
   var str = id;
   var elem = document.getElementById(str);
   elem.classList.add("highlight");
   setTimeout(function() {
     document.getElementById(id).classList.remove('highlight');
-  }, 200);
+  }, 100);
 }
 
 function plus() {
@@ -354,4 +491,19 @@ function TERM(pres, rate, fut, pay) {
     return terms;
   }
 
+}
+
+function NPV(int, initial, arr) {
+  initial = (initial * -1);
+  var npv = 0;
+  int = int / 100;
+
+  for (var i = 0; i < arr.length; i++) {
+    var number = parseFloat(arr[i]);
+    var t = i + 1;
+    npv += number / (Math.pow((1 + int), t));
+  }
+  npv = npv - initial;
+  npv = Math.round(npv * 100) / 100;
+  return npv;
 }
