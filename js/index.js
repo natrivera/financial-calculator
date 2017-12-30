@@ -297,7 +297,12 @@ function npvpress() {
 
 function irrpress() {
 
-  togglepress("irr");
+  if (npvbool) {
+    irr = IRR(npv, cashflow); //npv , arr
+    document.getElementById('display').innerHTML = "IRR = " + irr;
+    togglepress("irr");
+  }
+
 }
 
 function togglepress(id) {
@@ -506,4 +511,24 @@ function NPV(int, initial, arr) {
   npv = npv - initial;
   npv = Math.round(npv * 100) / 100;
   return npv;
+}
+
+function IRR(npv, arr) {
+  var irr = -2;
+  var sum = 10;
+  while (sum != 0) {
+    sum = 0;
+    irr += 0.0001;
+    for (var i = 0; i < arr.length; i++) {
+
+      sum += arr[i] / Math.pow((1 + irr), i);
+
+    }
+    if (sum < 0.1 && sum > -0.1) {
+      sum = 0;
+    }
+
+  }
+  irr = irr * 100;
+  return irr.toFixed(4);
 }
