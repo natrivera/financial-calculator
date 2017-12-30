@@ -4,11 +4,14 @@ var displaing = false;
 var negative = false;
 var cashsetting = false;
 var npvbool = false;
+var npvrun = false;
+var irrrun = false;
 var initialcash = null;
 var matharray = [];
 var cashflow = [];
 var cashfreq = [];
 var cfposition = -1;
+var irr = 0;
 var npv = 0;
 var npvrate = 0;
 var nterms = 0;
@@ -97,17 +100,31 @@ function clearbutt() {
     npvbool = false;
     npv = 0;
     npvrate = 0;
-    document.getElementById('second').classList.remove('highlight');
     document.getElementById('display').innerHTML = "CLEAR ALL";
+    setTimeout(function() {
+      document.getElementById('display').innerHTML = "0";
+    }, 250);
+  } else {
+    var tempstr = document.getElementById('display').innerHTML;
+    if (tempstr.indexOf("NPV") != -1) {
+      document.getElementById('display').innerHTML = "NPV = ";
+    } else if (tempstr.indexOf("IRR") != -1) {
+      document.getElementById('display').innerHTML = "IRR = ";
+    } else if (tempstr.indexOf("CF") != -1) {
+      document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = ";
+    } else if (tempstr.indexOf("I ") != -1) {
+      document.getElementById('display').innerHTML = "I = ";
+    } else {
+      setTimeout(function() {
+        document.getElementById('display').innerHTML = "0";
+      }, 250);
+    }
   }
   negative = false;
   compute = false;
   secondbool = false;
   matharray = [];
   document.getElementById('second').classList.remove('highlight');
-  setTimeout(function() {
-    document.getElementById('display').innerHTML = "0";
-  }, 250);
   togglepress("clr");
 }
 
@@ -120,6 +137,28 @@ function cptpress() {
   matharray = [];
   compute = true;
   togglepress("compute");
+  if (npvrun) {
+    var text = document.getElementById('display').innerHTML;
+    if (text.indexOf("NPV") != -1) {
+      var arr = cashflow;
+      arr.splice(0, 1);
+      npv = NPV(npvrate, cashflow[0], arr); //int , initial , arr
+      document.getElementById('display').innerHTML = "NPV = " + npv;
+
+    }
+    compute = false;
+    npvrun = false;
+  } else if (irrrun) {
+    if (npvbool) {
+      var text = document.getElementById('display').innerHTML;
+      if (text.indexOf("IRR") != -1) {
+        irr = IRR(npv, cashflow); //npv , arr
+        document.getElementById('display').innerHTML = "IRR = " + irr;
+      }
+    }
+    compute = false;
+    irrrun = false;
+  }
 }
 
 function npress() {
@@ -230,6 +269,25 @@ function entpress() {
 
 function uppress() {
 
+
+  if (cashsetting && cfposition > -1) {
+    cfposition--;
+    document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition + 1];
+  } else if (npvbool) {
+    if (npvrate == 0) {
+      document.getElementById('display').innerHTML = "I = ";
+    } else {
+      document.getElementById('display').innerHTML = "I = " + npvrate;
+    }
+
+    npvrun = false;
+    irrrun = true;
+  }
+
+  togglepress("up");
+}
+
+function downpress() {
   if (cashsetting && cashflow[cfposition + 1] != null) {
     cfposition++;
     if (cashflow[cfposition + 1] == null) {
@@ -239,23 +297,9 @@ function uppress() {
     }
 
   } else if (npvbool) {
-
-  }
-
-  togglepress("up");
-}
-
-function downpress() {
-  if (cashsetting && cfposition > -1) {
-    cfposition--;
-    document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition + 1];
-  } else if (npvbool) {
-    if (npv == 0) {
-      document.getElementById('display').innerHTML = "NPV = ";
-    } else {
-      document.getElementById('display').innerHTML = "NPV = " + npv;
-    }
-
+    document.getElementById('display').innerHTML = "NPV = " + npv;
+    npvrun = true;
+    irrrun = false;
   }
 
   togglepress("down");
@@ -275,21 +319,15 @@ function cfpress() {
 }
 
 function npvpress() {
-  var text = document.getElementById('display').innerHTML;
-  if (compute && text.indexOf("NPV") != -1) {
-    var arr = cashflow;
-    arr.splice(0, 1);
-    npv = NPV(npvrate, cashflow[0], arr); //int , initial , arr
-    document.getElementById('display').innerHTML = "NPV = " + npv;
-    compute = false;
+
+  npvbool = true;
+
+  if (npvrate == 0) {
+    document.getElementById('display').innerHTML = "I = ";
   } else {
-    if (npvrate == 0) {
-      document.getElementById('display').innerHTML = "I = ";
-    } else {
-      document.getElementById('display').innerHTML = "I = " + npvrate;
-    }
-    npvbool = true;
+    document.getElementById('display').innerHTML = "I = " + npvrate;
   }
+
 
   cashsetting = false;
   togglepress("npv");
@@ -298,11 +336,11 @@ function npvpress() {
 function irrpress() {
 
   if (npvbool) {
-    irr = IRR(npv, cashflow); //npv , arr
-    document.getElementById('display').innerHTML = "IRR = " + irr;
-    togglepress("irr");
+    irrrun = true;
   }
-
+  cashsetting = false;
+  document.getElementById('display').innerHTML = "IRR = " + irr;
+  togglepress("irr");
 }
 
 function togglepress(id) {
@@ -372,6 +410,12 @@ function equals() {
   matharray.push(temp);
   //console.log(matharray);
   var str = runmath(matharray);
+  if (isNaN(str)) {
+    str = "ERROR";
+    setTimeout(function() {
+      document.getElementById('display').innerHTML = "0";
+    }, 500);
+  }
   document.getElementById('display').innerHTML = str;
   matharray = [];
   negative = false;
@@ -524,16 +568,15 @@ function IRR(npv, arr) {
       sum += arr[i] / Math.pow((1 + irr), i);
 
     }
-    if (sum < (npv + 10) && sum > (npv - 10) ) {
+    if (sum < (npv + 10) && sum > (npv - 10)) {
       sum = 0;
-    } else if(irr > 10) {
+    } else if (irr > 10) {
 
       irr = "error";
       sum = 0;
     }
 
   }
-  //console.log(arr);
   irr = irr * 100;
   return irr.toFixed(4);
 }
