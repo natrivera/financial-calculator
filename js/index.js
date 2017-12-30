@@ -235,7 +235,7 @@ function uppress() {
     if (cashflow[cfposition + 1] == null) {
       document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = ";
     } else {
-      document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition];
+      document.getElementById('display').innerHTML = "CF" + (cfposition + 1) + " = " + cashflow[cfposition + 1];
     }
 
   } else if (npvbool) {
@@ -514,21 +514,26 @@ function NPV(int, initial, arr) {
 }
 
 function IRR(npv, arr) {
-  var irr = -2;
+  var irr = -1;
   var sum = 10;
   while (sum != 0) {
     sum = 0;
-    irr += 0.0001;
+    irr += 0.000001;
     for (var i = 0; i < arr.length; i++) {
 
       sum += arr[i] / Math.pow((1 + irr), i);
 
     }
-    if (sum < 0.1 && sum > -0.1) {
+    if (sum < (npv + 10) && sum > (npv - 10) ) {
+      sum = 0;
+    } else if(irr > 10) {
+
+      irr = "error";
       sum = 0;
     }
 
   }
+  //console.log(arr);
   irr = irr * 100;
   return irr.toFixed(4);
 }
