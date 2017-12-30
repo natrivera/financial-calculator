@@ -146,7 +146,7 @@ function cptpress() {
       document.getElementById('display').innerHTML = "NPV = " + npv;
 
     }
-    compute = false;
+    //compute = false;
     npvrun = false;
   } else if (irrrun) {
     if (npvbool) {
@@ -156,7 +156,7 @@ function cptpress() {
         document.getElementById('display').innerHTML = "IRR = " + irr;
       }
     }
-    compute = false;
+    //compute = false;
     irrrun = false;
   }
 }
@@ -335,9 +335,8 @@ function npvpress() {
 
 function irrpress() {
 
-  if (npvbool) {
-    irrrun = true;
-  }
+  irrrun = true;
+  npvbool = true;
   cashsetting = false;
   document.getElementById('display').innerHTML = "IRR = " + irr;
   togglepress("irr");
@@ -577,7 +576,7 @@ function IRR(npv, arr) {
 
   }
   irr = irr * 100;
-  if(isNaN(irr) == false) {
+  if (isNaN(irr) == false) {
     irr = irr.toFixed(4);
   }
   return irr;
