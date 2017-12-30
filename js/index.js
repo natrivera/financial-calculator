@@ -558,7 +558,7 @@ function NPV(int, initial, arr) {
 }
 
 function IRR(npv, arr) {
-  var irr = -1;
+  irr = -1;
   var sum = 10;
   while (sum != 0) {
     sum = 0;
@@ -570,13 +570,15 @@ function IRR(npv, arr) {
     }
     if (sum < (npv + 10) && sum > (npv - 10)) {
       sum = 0;
-    } else if (irr > 10) {
-
+    } else if (irr > 1) {
       irr = "error";
       sum = 0;
     }
 
   }
   irr = irr * 100;
-  return irr.toFixed(4);
+  if(isNaN(irr) == false) {
+    irr = irr.toFixed(4);
+  }
+  return irr;
 }
