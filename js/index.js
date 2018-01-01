@@ -343,7 +343,10 @@ function irrpress() {
 }
 
 function togglepress(id) {
-  navigator.vibrate(200); // vibrate for 200ms
+  if ("vibrate" in navigator) {
+    // vibration API supported
+    navigator.vibrate(200); // vibrate for 200ms
+  }
   var str = id;
   var elem = document.getElementById(str);
   elem.classList.add("highlight");
