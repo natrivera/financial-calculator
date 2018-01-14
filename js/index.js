@@ -368,6 +368,7 @@ function plus() {
   }
   document.getElementById('display').innerHTML = "+";
   displaing = true;
+  togglepress("plus");
 }
 
 function minus() {
@@ -381,6 +382,7 @@ function minus() {
   }
   document.getElementById('display').innerHTML = "-";
   displaing = true;
+  togglepress("minus");
 }
 
 function times() {
@@ -394,6 +396,7 @@ function times() {
   }
   document.getElementById('display').innerHTML = "x";
   displaing = true;
+  togglepress("times");
 }
 
 function divide() {
@@ -404,6 +407,7 @@ function divide() {
   } else {
     matharray.push(temp);
     matharray.push("/");
+    togglepress("divide");
   }
 
   document.getElementById('display').innerHTML = "&#247;";
@@ -425,6 +429,7 @@ function equals() {
   matharray = [];
   negative = false;
   compute = false;
+  togglepress("equal");
 }
 
 function runmath(arr) {
